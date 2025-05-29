@@ -76,7 +76,7 @@ namespace asgard_pc_agent
                 }
 
             }
-            
+
             // Default Return 'No Network'
             return new NetworkCard
             {

@@ -28,6 +28,10 @@ namespace asgard_pc_agent
         /// How long the workstation has been powered on in seconds. Convert for other units at your own pleasure.
         /// </summary>
         int SessionTimeSeconds { get; }
+        /// <summary>
+        /// Time since the computer was last used.
+        /// </summary>
+        int IdleTimeSeconds { get; }
 
         /// <summary>
         /// Topic path on which to publish messages about the Workstation on
@@ -55,6 +59,7 @@ namespace asgard_pc_agent
 
         public string OS { get; } = "WINDOWS";
         public int SessionTimeSeconds => (int)Environment.TickCount / 1000;
+        public int IdleTimeSeconds => (int)IdleTime.GetIdleTime().TotalSeconds;
 
         public string MqttTopic
         {

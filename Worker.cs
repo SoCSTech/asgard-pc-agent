@@ -4,6 +4,8 @@ namespace asgard_pc_agent
 {
     public class Worker : BackgroundService
     {
+        private readonly string MQTT_BROKER_URL = "mqtt.socstech.support";
+
         private readonly ILogger<Worker> _logger;
         private IMqttClient _mqttClient;
         private IWorkstation _workstation;
@@ -19,10 +21,10 @@ namespace asgard_pc_agent
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             // Connect to the MQTT Broker
-            Console.WriteLine("Connecting to MQTT Broker: mqtt.iamhardcodedpleaseupdate.bogon");
+            _logger.LogInformation("Connecting to MQTT Broker: " + MQTT_BROKER_URL);
 
             MqttClientOptions mqttOptions = new MqttClientOptionsBuilder()
-                .WithTcpServer("mqtt.socstech.support")
+                .WithTcpServer(MQTT_BROKER_URL)
                 .Build();
 
             await _mqttClient.ConnectAsync(mqttOptions, CancellationToken.None);
@@ -37,7 +39,7 @@ namespace asgard_pc_agent
                        .Build();
 
                 await _mqttClient.PublishAsync(applicationMessage, CancellationToken.None);
-                Console.WriteLine("Sent Ping to MQTT");
+                _logger.LogInformation("Sent Ping via MQTT");
 
                 await Task.Delay(1000, stoppingToken);
             }
