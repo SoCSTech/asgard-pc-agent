@@ -12,6 +12,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
       
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
@@ -25,9 +30,15 @@ jobs:
       - name: Build solution (Release)
         run: msbuild /t:Rebuild /p:Configuration=Release
 
+      - name: test
+        shell: pwsh
+        run: |
+          ls
+          pwd
+
       - name: Build MSI (VS Installer Project)
         shell: pwsh
-        run: msbuild ../installer/installer.vdproj /p:Configuration=Release
+        run: msbuild ./installer/installer.vdproj /p:Configuration=Release
 
       - name: Find MSI and version
         id: msi-find
