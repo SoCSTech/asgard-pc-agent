@@ -12,25 +12,25 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup Nuget
+        uses: nuget/setup-nuget@v2
 
       - name: Restore NuGet packages
         run: nuget restore
-
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
 
       - name: Build solution (Release)
         run: msbuild /t:Rebuild /p:Configuration=Release
 
       - name: Build MSI (VS Installer Project)
         shell: pwsh
-        run: |
-          $vdproj = Get-ChildItem -Recurse -Filter *.vdproj | Select-Object -First 1
-          if (-not $vdproj) { Write-Error "No .vdproj found"; exit 1 }
-          msbuild $vdproj.FullName /p:Configuration=Release
+        run: msbuild installer/installer.vdproj /p:Configuration=Release
 
       - name: Find MSI and version
-        id: msifind
+        id: msi-find
         shell: pwsh
         run: |
           $msi = Get-ChildItem -Recurse -Filter *.msi | Select-Object -First 1
