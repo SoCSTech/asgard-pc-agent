@@ -1,0 +1,42 @@
+name: Build MSI Installer
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build-installer:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild path
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Restore NuGet packages
+        run: nuget restore asgard-pc-agent.sln
+
+      - name: Build main solution (Release)
+        run: msbuild asgard-pc-agent.sln /p:Configuration=Release
+
+      - name: Get version
+        id: get_version
+        run: |
+          $version = (Select-String -Path asgard-pc-agent/asgard-pc-agent.csproj -Pattern '<Version>(.+?)</Version>').Matches[0].Groups[1].Value
+          echo "version=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Build Installer Project (.vdproj)
+        run: msbuild installer/installer.vdproj /p:Configuration=Release
+
+      - name: Rename MSI for versioning
+        run: |
+          mv "installer/Release/installer.msi" "installer/Release/asgard-pc-agent-v${{ steps.get_version.outputs.version }}.msi"
+
+      - name: Upload MSI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: asgard-pc-agent-installer
+          path: installer/Release/asgard-pc-agent-v*.msi
