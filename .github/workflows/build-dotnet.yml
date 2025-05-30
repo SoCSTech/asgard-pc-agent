@@ -3,7 +3,7 @@ name: Build MSI Installer
 on:
   push:
     branches: [ main ]
-  pull_request:
+  workflow_dispatch:
 
 jobs:
   build-installer:
@@ -13,30 +13,36 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup MSBuild path
+      - name: Restore NuGet packages
+        run: nuget restore
+
+      - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
-      - name: Restore NuGet packages
-        run: nuget restore asgard-pc-agent.sln
+      - name: Build solution (Release)
+        run: msbuild /t:Rebuild /p:Configuration=Release
 
-      - name: Build main solution (Release)
-        run: msbuild asgard-pc-agent.sln /p:Configuration=Release
-
-      - name: Get version
-        id: get_version
+      - name: Build MSI (VS Installer Project)
+        shell: pwsh
         run: |
-          $version = (Select-String -Path asgard-pc-agent/asgard-pc-agent.csproj -Pattern '<Version>(.+?)</Version>').Matches[0].Groups[1].Value
-          echo "version=$version" >> $env:GITHUB_OUTPUT
+          $vdproj = Get-ChildItem -Recurse -Filter *.vdproj | Select-Object -First 1
+          if (-not $vdproj) { Write-Error "No .vdproj found"; exit 1 }
+          msbuild $vdproj.FullName /p:Configuration=Release
 
-      - name: Build Installer Project (.vdproj)
-        run: msbuild installer/installer.vdproj /p:Configuration=Release
-
-      - name: Rename MSI for versioning
+      - name: Find MSI and version
+        id: msifind
+        shell: pwsh
         run: |
-          mv "installer/Release/installer.msi" "installer/Release/asgard-pc-agent-v${{ steps.get_version.outputs.version }}.msi"
+          $msi = Get-ChildItem -Recurse -Filter *.msi | Select-Object -First 1
+          if (-not $msi) { Write-Error "No MSI file found"; exit 1 }
+          $version = (Get-Item $msi.FullName).VersionInfo.ProductVersion
+          if (-not $version) { $version = "unknown" }
+          $newName = "asgard-pc-agent-$version.msi"
+          Copy-Item $msi.FullName $newName
+          echo "msi_path=$newName" | Out-File -FilePath $env:GITHUB_ENV -Append
 
       - name: Upload MSI artifact
         uses: actions/upload-artifact@v4
         with:
-          name: asgard-pc-agent-installer
-          path: installer/Release/asgard-pc-agent-v*.msi
+          name: asgard-pc-agent-msi
+          path: ${{ env.msi_path }}
