@@ -35,6 +35,8 @@ jobs:
         run: |
           ls
           pwd
+          Get-ChildItem installer/
+          Get-Content installer/installer.vdproj
 
       - name: Build MSI (VS Installer Project)
         shell: pwsh
