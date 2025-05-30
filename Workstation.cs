@@ -59,7 +59,9 @@ namespace asgard_pc_agent
 
         public string OS { get; } = "WINDOWS";
         public int SessionTimeSeconds => (int)Environment.TickCount / 1000;
-        public int IdleTimeSeconds => (int)IdleTime.GetIdleTime().TotalSeconds;
+        // Disabled due to not working in service
+        //public int IdleTimeSeconds => (int)IdleTime.GetIdleTime().TotalSeconds;
+        public int IdleTimeSeconds { get; } = 0;
 
         public string MqttTopic
         {

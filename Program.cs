@@ -9,8 +9,7 @@ if (args is { Length: 1 })
 {
     try
     {
-        string executablePath =
-            Path.Combine(AppContext.BaseDirectory, "asgard-pc-agent.exe");
+        string executablePath = Path.Combine(AppContext.BaseDirectory, "asgard-pc-agent.exe");
 
         if (args[0] is "/Install")
         {
