@@ -26,4 +26,6 @@ Then press `Build` on the top bar, then `Clean Solution`... And then `Build Solu
 
 Then you should have the following `.msi` file built `asgard-pc-agent\asgard-pc-agent.setup\Release\asgard-pc-agent.setup.msi`.
 
+Rename this from `asgard-pc-agent.setup.msi` to `asgard-pc-agent-v.0.1.0-setup.msi` (edit as appropriate).
+
 Create this an a release in GitHub and you can now deploy this to the Lab PCs via Deep Freeze.
