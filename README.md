@@ -15,3 +15,15 @@ This is a dotnet worker service that runs in the background of a lab PC and then
   "MqttTopic": "asgard/pc/1A/G6"
 }
 ```
+
+## Building an MSI File Manually
+
+You first need to install the [Microsoft Visual Studio Installer Projects 2022](https://marketplace.visualstudio.com/items?itemName=VisualStudioClient.MicrosoftVisualStudio2022InstallerProjects) extension inside of Visual Studio 2022. This will let you use all the MSI tooling. 
+
+Then you should check your build target is set to `Release` and **not** debug! 
+
+Then press `Build` on the top bar, then `Clean Solution`... And then `Build Solution`.
+
+Then you should have the following `.msi` file built `asgard-pc-agent\asgard-pc-agent.setup\Release\asgard-pc-agent.setup.msi`.
+
+Create this an a release in GitHub and you can now deploy this to the Lab PCs via Deep Freeze.

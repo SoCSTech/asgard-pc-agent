@@ -4,7 +4,6 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch:
-
 jobs:
   build-installer:
     runs-on: windows-latest
@@ -29,18 +28,6 @@ jobs:
 
       - name: Build solution (Release)
         run: msbuild /t:Rebuild /p:Configuration=Release
-
-      - name: test
-        shell: pwsh
-        run: |
-          ls
-          pwd
-          Get-ChildItem installer/
-          Get-Content installer/installer.vdproj
-
-      - name: Build MSI (VS Installer Project)
-        shell: pwsh
-        run: msbuild ./installer/installer.vdproj /p:Configuration=Release
 
       - name: Find MSI and version
         id: msi-find
