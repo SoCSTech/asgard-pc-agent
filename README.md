@@ -11,7 +11,6 @@ This is a dotnet worker service that runs in the background of a lab PC and then
   "MacAddress": "ABCDABCDABCD",
   "OS": "WINDOWS",
   "SessionTimeSeconds": 86400,
-  "IdleTimeSeconds": 0,
   "MqttTopic": "asgard/pc/1A/G6"
 }
 ```

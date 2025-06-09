@@ -29,15 +29,9 @@ namespace asgard_pc_agent
         /// </summary>
         int SessionTimeSeconds { get; }
         /// <summary>
-        /// Time since the computer was last used.
-        /// </summary>
-        int IdleTimeSeconds { get; }
-
-        /// <summary>
         /// Topic path on which to publish messages about the Workstation on
         /// </summary>
         string MqttTopic { get; }
-
         /// <summary>
         /// Makes the workstation available as a Json Object
         /// </summary>
@@ -59,9 +53,6 @@ namespace asgard_pc_agent
 
         public string OS { get; } = "WINDOWS";
         public int SessionTimeSeconds => (int)Environment.TickCount / 1000;
-        // Disabled due to not working in service
-        //public int IdleTimeSeconds => (int)IdleTime.GetIdleTime().TotalSeconds;
-        public int IdleTimeSeconds { get; } = 0;
 
         public string MqttTopic
         {
