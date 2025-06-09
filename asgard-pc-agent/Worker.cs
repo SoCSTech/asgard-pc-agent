@@ -16,6 +16,10 @@ namespace asgard_pc_agent
         {
             _logger = logger;
             _workstation = new Workstation();
+            
+            // Create MQTT Client
+            MqttClientFactory mqttFactory = new MqttClientFactory();
+            _mqttClient = mqttFactory.CreateMqttClient();
         }
 
         /// <summary>
@@ -23,9 +27,6 @@ namespace asgard_pc_agent
         /// </summary>
         private async Task ConnectToMqtt()
         {
-            // Create Client
-            MqttClientFactory mqttFactory = new MqttClientFactory();
-            _mqttClient = mqttFactory.CreateMqttClient();
 
             MqttClientOptions mqttOptions = new MqttClientOptionsBuilder()
                .WithTcpServer(MQTT_BROKER_URL)
@@ -62,6 +63,7 @@ namespace asgard_pc_agent
                     var applicationMessage = new MqttApplicationMessageBuilder()
                            .WithTopic(_workstation.MqttTopic)
                            .WithPayload(_workstation.ToJson())
+                           .WithRetainFlag()
                            .Build();
 
                     await _mqttClient.PublishAsync(applicationMessage, CancellationToken.None);
