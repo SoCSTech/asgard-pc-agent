@@ -6,7 +6,7 @@ namespace asgard_pc_agent
     {
         // Change these options for different use cases!
         private readonly string MQTT_BROKER_URL = "mqtt.socstech.support";
-        private readonly int TIME_MS_BETWEEN_PINGS = 60000; // 60,000 = 1 min
+        private readonly int TIME_MS_BETWEEN_PINGS = 6000; // 60,000 = 1 min
 
         private readonly ILogger<Worker> _logger;
         private IMqttClient _mqttClient;
@@ -15,7 +15,7 @@ namespace asgard_pc_agent
         public Worker(ILogger<Worker> logger)
         {
             _logger = logger;
-            _workstation = new Workstation();
+            _workstation = new Workstation(_logger);
             
             // Create MQTT Client
             MqttClientFactory mqttFactory = new MqttClientFactory();
@@ -52,7 +52,6 @@ namespace asgard_pc_agent
         {
             // Connect to the MQTT Broker
             _logger.LogInformation("Connecting to MQTT Broker: " + MQTT_BROKER_URL);
-
             await ConnectToMqtt();
 
             // Main Loop!

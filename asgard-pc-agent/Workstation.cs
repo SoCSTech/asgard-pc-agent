@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace asgard_pc_agent
 {
@@ -29,6 +30,11 @@ namespace asgard_pc_agent
         /// </summary>
         int SessionTimeSeconds { get; }
         /// <summary>
+        /// Deep Freeze Status of the machine, Deep Freeze is the software that makes lab PCs forget things on reboot.
+        /// We want to get back the value of frozen.
+        /// </summary>
+        DeepFreeze.DeepFreezeStatus DeepFreezeStatus { get; }
+        /// <summary>
         /// Topic path on which to publish messages about the Workstation on
         /// </summary>
         string MqttTopic { get; }
@@ -44,6 +50,13 @@ namespace asgard_pc_agent
     /// </summary>
     internal class Workstation : IWorkstation
     {
+        // Inject the Logger into this class to use later
+        private ILogger _logger;
+        public Workstation(ILogger logger)
+        {
+            _logger = logger;
+        }
+
         public string Name => Environment.MachineName;
 
         private NetworkCard _networkCard => NetworkCard.GetNetworkInfo();
@@ -54,6 +67,7 @@ namespace asgard_pc_agent
         public string OS { get; } = "WINDOWS";
         public int SessionTimeSeconds => (int)Environment.TickCount / 1000;
 
+        public DeepFreeze.DeepFreezeStatus DeepFreezeStatus => new DeepFreeze(_logger).GetStatus();
         public string MqttTopic
         {
             get
@@ -80,7 +94,7 @@ namespace asgard_pc_agent
 
         public string ToJson()
         {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented, new StringEnumConverter());
         }
 
     }
