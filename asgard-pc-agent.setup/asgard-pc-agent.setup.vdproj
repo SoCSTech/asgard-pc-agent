@@ -44,6 +44,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -194,15 +202,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Asgard PC Agent"
-        "ProductCode" = "8:{2616C637-D8AC-40B3-8C69-5A7D953F270C}"
-        "PackageCode" = "8:{FCBC90AE-D34B-44B8-89FC-37806BAB263F}"
+        "ProductCode" = "8:{59466F64-F5BC-46A9-B346-92592630CD23}"
+        "PackageCode" = "8:{A44BDC5D-EDC9-4EA4-9B6F-545778C48F78}"
         "UpgradeCode" = "8:{83FFECF4-D412-4F63-8DEC-15495F74863D}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.1.0"
+        "ProductVersion" = "8:0.1.1"
         "Manufacturer" = "8:University of Lincoln"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://github.com/socstech/asgard-pc-agent/issues"
